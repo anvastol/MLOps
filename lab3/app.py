@@ -4,7 +4,7 @@ import pickle
 app = Flask(__name__)
 
 # Загружаем модель
-with open('model.pkl', 'rb') as f:
+with open('/lab3/model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 @app.route('/predict', methods=['POST'])
