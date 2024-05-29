@@ -1,18 +1,17 @@
-# Импорт библиотек
 from flask import Flask, request, jsonify
+import pickle
 
 app = Flask(__name__)
 
-# Роут для принятия запросов и возврата предсказаний
+# Загружаем модель
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
+
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json() # Получение данных из запроса
-    input_value = data['input_value'] # Получение входного значения
-
-    # Предсказание на основе входных данных
-    prediction = predict_value(input_value)
-
-    return jsonify({'prediction': prediction}) # Возврат предсказания
+    data = request.get_json()
+    prediction = model.predict([[data['value']]])
+    return jsonify({'prediction': prediction.tolist()})
 
 if __name__ == '__main__':
-    app.run(debug=True) # Запуск Flask приложения
+    app.run(debug=True, host='0.0.0.0', port=5000)
